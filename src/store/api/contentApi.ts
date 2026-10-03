@@ -4,6 +4,7 @@ import type { Category, ContentFilter, ContentPage, ContentType, TrendingRespons
 export interface FeedArgs {
   categories: Category[];
   sources: ContentType[];
+  basedOn?: string;
 }
 
 export interface SearchArgs {
@@ -35,6 +36,7 @@ export const contentApi = createApi({
           categories: queryArg.categories.join(','),
           sources: queryArg.sources.join(','),
           page: pageParam,
+          ...(queryArg.basedOn ? { basedOn: queryArg.basedOn } : {}),
         },
       }),
     }),

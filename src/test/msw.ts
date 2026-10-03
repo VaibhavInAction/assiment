@@ -10,7 +10,7 @@ export const server = setupServer(
   http.get(`${API}/feed`, () => HttpResponse.json(makePage([]))),
   http.get(`${API}/search`, () => HttpResponse.json(makePage([]))),
   http.get(`${API}/trending`, () =>
-    HttpResponse.json({ news: [], social: [], usingMockData: false } satisfies TrendingResponse),
+    HttpResponse.json({ news: [], movies: [], social: [], usingMockData: false } satisfies TrendingResponse),
   ),
 );
 

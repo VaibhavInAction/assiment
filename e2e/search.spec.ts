@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { openFeed } from './helpers';
 
 test.describe('Search', () => {
-  test('debounced header search opens results across news and posts', async ({ page }) => {
+  test('debounced header search opens results across news, movies and posts', async ({ page }) => {
     await openFeed(page);
 
     const requests: string[] = [];
@@ -19,6 +19,7 @@ test.describe('Search', () => {
     const cards = page.getByTestId('content-card');
     await expect(cards.first()).toBeVisible();
     await expect(cards.filter({ hasText: 'News' }).first()).toBeVisible();
+    await expect(cards.filter({ hasText: 'Movie' }).first()).toBeVisible();
     await expect(cards.filter({ hasText: 'Social' }).first()).toBeVisible();
 
     // Debounced: one request for the full word, not one per keystroke.
@@ -32,10 +33,10 @@ test.describe('Search', () => {
     await expect(page).toHaveURL(/\/search$/);
     await expect(page.getByTestId('content-card').first()).toBeVisible();
 
-    await page.getByRole('button', { name: 'Social', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Social', exact: true })).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.getByRole('link', { name: /Read More/ })).toHaveCount(0);
-    await expect(page.getByRole('link', { name: /View Post/ }).first()).toBeVisible();
+    await page.getByRole('button', { name: 'Movies', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Movies', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('link', { name: /Read More|View Post/ })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /Play Now/ }).first()).toBeVisible();
   });
 
   test('shows an empty state when nothing matches', async ({ page }) => {

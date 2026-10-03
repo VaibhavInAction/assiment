@@ -22,7 +22,7 @@ export function FavoritesSection() {
   const [filter, setFilter] = useState<ContentFilter>('all');
 
   const visible = filter === 'all' ? favorites : favorites.filter((item) => item.type === filter);
-  const filterOptions = (['all', 'news', 'social'] as const).map((value) => ({
+  const filterOptions = (['all', 'news', 'movie', 'social'] as const).map((value) => ({
     value,
     label: t(`filters.${value}`),
   }));

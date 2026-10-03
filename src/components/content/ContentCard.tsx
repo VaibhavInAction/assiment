@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ExternalLink, MessageCircle, Newspaper, ThumbsUp, type LucideIcon } from 'lucide-react';
+import { ExternalLink, Film, MessageCircle, Newspaper, Play, Star, ThumbsUp, type LucideIcon } from 'lucide-react';
 import { memo, useId, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ContentItem, ContentType } from '@/lib/types';
@@ -10,6 +10,7 @@ import { FavoriteButton } from './FavoriteButton';
 
 const TYPE_STYLES: Record<ContentType, { icon: LucideIcon; text: string; fallback: string }> = {
   news: { icon: Newspaper, text: 'text-news', fallback: 'bg-news/15 text-news' },
+  movie: { icon: Film, text: 'text-movie', fallback: 'bg-movie/15 text-movie' },
   social: { icon: MessageCircle, text: 'text-social', fallback: 'bg-social/15 text-social' },
 };
 
@@ -21,13 +22,23 @@ export interface ContentCardProps {
   toolbar?: ReactNode;
 }
 
+function useDateLabel(item: ContentItem): string {
+  const { t, i18n } = useTranslation();
+  const date = new Date(item.publishedAt);
+  if (Number.isNaN(date.getTime()) || date.getTime() === 0) return '';
+  if (item.type === 'movie') return t('card.released', { year: date.getUTCFullYear() });
+  return formatRelativeTime(item.publishedAt, i18n.language);
+}
+
 export const ContentCard = memo(function ContentCard({ item, rank, toolbar }: ContentCardProps) {
   const { t, i18n } = useTranslation();
   const titleId = useId();
   const [imageFailed, setImageFailed] = useState(false);
-  const dateLabel = formatRelativeTime(item.publishedAt, i18n.language);
+  const dateLabel = useDateLabel(item);
   const { icon: TypeIcon, text, fallback } = TYPE_STYLES[item.type];
-  const cta = item.type === 'news' ? t('card.readMore') : t('card.viewPost');
+
+  const cta = { news: t('card.readMore'), movie: t('card.playNow'), social: t('card.viewPost') }[item.type];
+  const CtaIcon = item.type === 'movie' ? Play : ExternalLink;
 
   return (
     <motion.article
@@ -87,6 +98,13 @@ export const ContentCard = memo(function ContentCard({ item, rank, toolbar }: Co
               <time dateTime={item.publishedAt}>{dateLabel}</time>
             </>
           )}
+          {item.rating ? (
+            <span className="inline-flex items-center gap-1">
+              <Star aria-hidden className="size-3.5 fill-current text-movie" />
+              <span className="sr-only">{t('card.rating', { rating: item.rating.toFixed(1) })}</span>
+              <span aria-hidden>{item.rating.toFixed(1)}</span>
+            </span>
+          ) : null}
         </p>
 
         <h3 id={titleId} className="line-clamp-3 text-base font-semibold leading-snug">
@@ -107,7 +125,7 @@ export const ContentCard = memo(function ContentCard({ item, rank, toolbar }: Co
 
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
           <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn-primary px-3.5">
-            <ExternalLink aria-hidden className="size-4" />
+            <CtaIcon aria-hidden className="size-4" />
             {cta}
             <span className="sr-only">
               : {item.title} {t('card.newTab')}

@@ -23,6 +23,7 @@
   --danger: #be123c;
   --ring: #6366f1;
   --news: #0369a1;
+  --movie: #b45309;
   --social: #be185d;
   --live: #15803d;
   color-scheme: light;
@@ -43,6 +44,7 @@
   --danger: #fb7185;
   --ring: #818cf8;
   --news: #7dd3fc;
+  --movie: #fcd34d;
   --social: #f9a8d4;
   --live: #4ade80;
   color-scheme: dark;
@@ -63,6 +65,7 @@
   --color-danger: var(--danger);
   --color-ring: var(--ring);
   --color-news: var(--news);
+  --color-movie: var(--movie);
   --color-social: var(--social);
   --color-live: var(--live);
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;

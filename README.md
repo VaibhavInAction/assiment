@@ -1,6 +1,6 @@
 # Pulseboard: Personalized Content Dashboard
 
-A dashboard that brings **news** and **social posts** into one feed you can customize. You pick your topics, search across every source, drag cards into your own order, save favorites, and switch between light/dark mode and three languages.
+A dashboard that brings **news**, **movie recommendations** and **social posts** into one feed you can customize. You pick your topics, search across every source, drag cards into your own order, save favorites, and switch between light/dark mode and three languages.
 
 Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Redux Toolkit + RTK Query**, **Tailwind CSS v4**, **Framer Motion** and **React DnD**. Tested with **Vitest**, **React Testing Library**, **MSW** and **Playwright**.
 
@@ -42,15 +42,15 @@ Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Redux To
 | --- | --- |
 | **User preferences** | Settings page to pick favorite topics (Technology, Business & Finance, Sports, Entertainment, Science, Health, General) and which content sources appear. Stored in Redux and saved to `localStorage`. |
 | **News API** | [NewsAPI](https://newsapi.org) top headlines for each selected topic, plus full-text search. |
-| **Recommendations API** | **Not included.** TMDB is blocked on the developer's network, so it could not be built and tested. See [Trade-offs](#trade-offs-and-next-steps). |
+| **Recommendations API** | [TMDB](https://www.themoviedb.org) movies. They match your topics (topics map to genres), and once you favorite a movie the feed shows **"Movie picks inspired by …"** from TMDB's recommendations for it. |
 | **Social media API** | A mock social API (allowed by the brief) that generates posts by hashtag and topic. |
-| **Content cards** | Image, type badge, source, time, headline, description, and a call to action (**Read More** / **View Post**), plus a favorite button. Broken images fall back to a placeholder. |
+| **Content cards** | Image, type badge, source, time, headline, description, and a call to action (**Read More** / **Play Now** / **View Post**), plus a favorite button. Broken images fall back to a placeholder. |
 | **Infinite scrolling** | The feed and search results load the next page when you near the bottom (IntersectionObserver). A visible **Load more** button is kept as a fallback. |
 | **Dashboard layout** | Responsive layout: fixed sidebar on desktop, slide-in drawer on mobile. Sticky header with search, language picker, theme toggle, settings and account menu. |
-| **Personalized feed** | News and social posts mixed into one unified feed. |
-| **Trending section** | Top headlines and the most-liked posts, filterable by topic and ranked #1–#6. |
+| **Personalized feed** | News, movies and social posts mixed into one unified feed. |
+| **Trending section** | Top headlines, trending movies (TMDB weekly trending) and the most-liked posts, filterable by topic and ranked #1–#6. |
 | **Favorites section** | Heart any card to save it. Favorites persist, can be filtered by type, and can be cleared. |
-| **Search** | Header search across news and social posts, filterable by type. |
+| **Search** | Header search across news, movies and posts, filterable by type. |
 | **Debounced search** | Keystrokes update the input instantly, but the query is committed (and the API called) only after 400 ms without typing. Enter searches immediately. |
 | **Drag and drop** | Reorder feed cards with **React DnD**. **Framer Motion** animates them into place, and the order is saved. Each card also has **Move earlier / Move later** buttons so reordering works with a keyboard or a touch screen. |
 | **Dark mode** | Colour tokens are **CSS custom properties** consumed by **Tailwind** utilities. An inline script applies the saved or OS theme before first paint, so there is no flash. |
@@ -58,7 +58,7 @@ Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Redux To
 | **Redux Toolkit** | Slices for preferences, favorites (entity adapter), feed order, auth, search and UI state. |
 | **Async logic** | **RTK Query** (including infinite queries) for every API call, with caching and request de-duplication. |
 | **Persistence** | A listener middleware saves preferences, favorites, feed order and profile to `localStorage`. Saves are debounced, flushed on page hide, and validated when loaded. |
-| **Testing** | 108 unit and integration tests (Vitest + RTL + MSW) and 15 Playwright E2E tests. |
+| **Testing** | 110 unit and integration tests (Vitest + RTL + MSW) and 15 Playwright E2E tests. |
 
 ### Bonus features
 
@@ -87,9 +87,9 @@ cd assiment
 npm install
 ```
 
-### 2. Add a NewsAPI key (optional, but recommended)
+### 2. Add API keys (optional, but recommended)
 
-The app **works without a key**: news falls back to bundled demo data. To see live news:
+The app **works without any keys**: each source falls back to bundled demo data. To see live content:
 
 ```bash
 cp .env.example .env.local
@@ -100,6 +100,7 @@ Then fill in `.env.local`:
 | Variable | Where to get it |
 | --- | --- |
 | `NEWS_API_KEY` | Free key at <https://newsapi.org/register> |
+| `TMDB_API_KEY` | Free at <https://www.themoviedb.org/settings/api>. Either the v3 **API Key** or the v4 **Read Access Token** works. |
 | `USE_MOCK_DATA` | Optional. Set to `true` to force demo data everywhere. |
 
 These variables are read **only on the server**. They are never prefixed with `NEXT_PUBLIC_` and never reach the browser.
@@ -132,12 +133,12 @@ Open <http://localhost:3000>.
 ## User flow
 
 1. **Land on "Your Feed".** Skeleton cards show while saved preferences load from `localStorage`. The feed is then fetched once, already personalized (it never fetches defaults first and then refetches).
-2. **Browse.** Each card is a news story (**Read More**) or a social post (**View Post**, with hashtags and likes). Scrolling down loads more automatically.
+2. **Browse.** Each card is a news story (**Read More**), a movie (**Play Now**, with rating and year) or a social post (**View Post**, with hashtags and likes). Scrolling down loads more automatically.
 3. **Personalize.** Open **Settings** (sidebar, header gear or *Edit topics*). Choose topics and sources, toggle dark mode, switch language, turn live updates on or off. Changes apply instantly and are saved.
 4. **Organize.** Drag a card onto another card to move it there, or use the arrow buttons on a card. The order survives reloads. **Reset order** restores the natural order.
-5. **Save favorites.** Tap the heart on any card. The **Favorites** page lists everything saved, newest first, filterable by type.
-6. **Search.** Type in the header search (or press `/`). After a short pause the app opens **Search** with results from all sources. Filter by News or Social. `Esc` clears.
-7. **Trending.** See top headlines and the hottest posts, by topic.
+5. **Save favorites.** Tap the heart on any card. The **Favorites** page lists everything saved, newest first, filterable by type. After you favorite a TMDB movie, the next visit's feed recommends movies like it.
+6. **Search.** Type in the header search (or press `/`). After a short pause the app opens **Search** with results from all sources. Filter by News, Movies or Social. `Esc` clears.
+7. **Trending.** See top headlines, trending movies and the hottest posts, by topic.
 8. **Live posts.** While on the feed, new posts stream in over SSE. A banner shows how many are waiting, and one click adds them to the top.
 9. **Sign in (mock).** Use **Sign in** in the header with any email and a 6+ character password, or **Continue with demo account**. Your name and avatar appear in the header, and you can edit your profile in Settings.
 
@@ -159,20 +160,23 @@ flowchart LR
     SSE[/api/social/stream/]
     Routes --> Agg[content.ts aggregator]
     Agg --> News[news.ts]
+    Agg --> Movies[movies.ts]
     Agg --> Social[mock social API]
   end
 
   News -->|X-Api-Key header| NewsAPI[(NewsAPI)]
+  Movies --> TMDB[(TMDB)]
   News -. on error / no key .-> Demo[(Demo data)]
+  Movies -. on error / no key .-> Demo
 ```
 
-**Why route handlers?** The browser never talks to NewsAPI directly. Our own `/api/*` endpoints:
+**Why route handlers?** The browser never talks to NewsAPI or TMDB directly. Our own `/api/*` endpoints:
 
 - keep API keys secret (server-only env vars, guarded by the `server-only` package),
 - normalize every source into one `ContentItem` shape,
 - validate and clamp all query parameters,
 - cache upstream responses for 15 minutes to protect free-tier quotas,
-- fall back to demo data per source, so a NewsAPI outage never breaks the social feed or the page.
+- fall back to demo data per source, so a NewsAPI outage never breaks the movies or the page.
 
 ### Project structure
 
@@ -213,7 +217,7 @@ e2e/                          # Playwright specs
 | --- | --- | --- |
 | `preferences` | topics, theme, language, enabled sources, live updates | ✅ |
 | `favorites` | saved items (normalized with `createEntityAdapter`, newest first) | ✅ |
-| `feed` | drag-and-drop order, live posts | order only |
+| `feed` | drag-and-drop order, recommendation seed, live posts | order only |
 | `auth` | mock user profile (never a password) | ✅ |
 | `search` | committed (debounced) query and type filter | — |
 | `ui` | `hydrated` flag | — |
@@ -222,6 +226,8 @@ e2e/                          # Playwright specs
 **Hydration without mismatches.** The server always renders defaults. After mount, `Providers` dispatches a single `hydrateFromStorage` action that every slice handles. Data fetching waits for that flag (`skipToken`), so the first request already uses the user's topics. Writes are blocked until hydration, so defaults can never overwrite saved data.
 
 **Drag-and-drop ordering.** `applyCustomOrder` (in `lib/feedOrder.ts`) re-applies the saved order to freshly fetched pages. Cards the user has arranged keep their relative order. New cards (the next page, a live post) stay where they naturally appear instead of jumping to the end.
+
+**Recommendation seed.** The "because you liked…" movie is chosen once per visit, during hydration. Favoriting a movie therefore never reloads the feed under the user's cursor.
 
 ---
 
@@ -249,7 +255,7 @@ Built to WCAG 2.1 AA:
 
 - **API keys stay on the server.** Third-party calls happen only in route handlers. NewsAPI keys are sent in a header (not the URL), and logs never print upstream URLs.
 - `.env.local` is git-ignored. Only `.env.example` (empty values) is committed.
-- **All input is validated server-side**: categories and types are allow-listed, pages are clamped, and query length is capped.
+- **All input is validated server-side**: categories and types are allow-listed, pages are clamped, query length is capped, and TMDB ids must be numeric.
 - **localStorage is treated as untrusted.** Everything read back is validated (`sanitizePersistedState`), including the avatar colour, since it is used in a `style` attribute.
 - External links use `rel="noopener noreferrer"`. Article URLs and image URLs must be `http(s)`.
 - Security headers: `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`. `X-Powered-By` is disabled.
@@ -260,7 +266,7 @@ Built to WCAG 2.1 AA:
 ## Testing
 
 ```bash
-npm test               # 108 unit + integration tests
+npm test               # 110 unit + integration tests
 npm run test:coverage  # with coverage (~76% statements; E2E covers the rest of the UI)
 npm run test:e2e       # 15 Playwright tests
 ```
@@ -303,7 +309,6 @@ Then open <http://localhost:3000>. The `NEWS_API_KEY` from `.env.local` is used 
 
 ## Trade-offs and next steps
 
-- **No recommendations API (movies or music).** TMDB was the planned source, but the developer's internet provider blocks `themoviedb.org` at the DNS level. The site and API time out, so a key could not be obtained or tested. Rather than ship untested code, the movie source was removed. The feed aggregator is source-agnostic: adding a recommendations source means one server module in `lib/server/` and one new `ContentType`, and the cards, search, favorites and filters pick it up automatically.
 - **Social media** is a mock API. Real Twitter/X and Instagram APIs require paid or app-review access. The mock follows the same `ContentItem` contract, so swapping in a real client only touches `lib/mock/social.ts`.
 - **Authentication** is mocked on the client. Next step: NextAuth.js with OAuth providers and server-side sessions, moving favorites and preferences to a database so they sync across devices.
 - **Drag and drop** uses the HTML5 backend, which does not support touch dragging. Touch users get the move buttons. A multi-backend (HTML5 + touch) would add touch dragging.

@@ -24,6 +24,7 @@ import {
   selectFeedOrder,
   selectLiveItems,
   selectPendingLiveCount,
+  selectRecommendationSeed,
   showPendingLive,
 } from '@/store/slices/feedSlice';
 import { selectCategories, selectEnabledSources, selectLiveUpdates } from '@/store/slices/preferencesSlice';
@@ -35,6 +36,7 @@ export function FeedSection() {
   const hydrated = useAppSelector(selectHydrated);
   const categories = useAppSelector(selectCategories);
   const sources = useAppSelector(selectEnabledSources);
+  const seed = useAppSelector(selectRecommendationSeed);
   const order = useAppSelector(selectFeedOrder);
   const liveItems = useAppSelector(selectLiveItems);
   const pendingCount = useAppSelector(selectPendingLiveCount);
@@ -47,7 +49,7 @@ export function FeedSection() {
 
   // Wait for saved preferences before fetching, so the first request is already personalized.
   const { data, isLoading, isError, refetch, hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage } =
-    useGetFeedInfiniteQuery(hydrated ? { categories, sources } : skipToken);
+    useGetFeedInfiniteQuery(hydrated ? { categories, sources, basedOn: seed?.id } : skipToken);
 
   const items = useMemo(() => {
     const fetched = data?.pages.flatMap((page) => page.items) ?? [];
@@ -106,6 +108,7 @@ export function FeedSection() {
                 </li>
               ))}
             </ul>
+            {seed && <p className="text-xs">{t('feed.basedOn', { title: seed.title })}</p>}
           </div>
         }
         actions={

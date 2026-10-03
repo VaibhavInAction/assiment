@@ -36,15 +36,16 @@ describe('API route handlers', () => {
   });
 
   it('GET /api/search returns matching results', async () => {
-    const response = await getSearch(request('/api/search?q=venus&type=social'));
+    const response = await getSearch(request('/api/search?q=matrix&type=movie'));
     const body = (await response.json()) as ContentPage;
-    expect(body.items[0].title).toContain('Venus');
+    expect(body.items[0].title).toBe('The Matrix');
   });
 
-  it('GET /api/trending returns news and social groups', async () => {
+  it('GET /api/trending returns all three groups', async () => {
     const response = await getTrending(request('/api/trending?category=all'));
     const body = (await response.json()) as TrendingResponse;
     expect(body.news.length).toBeGreaterThan(0);
+    expect(body.movies.length).toBeGreaterThan(0);
     expect(body.social.length).toBeGreaterThan(0);
   });
 });

@@ -8,8 +8,8 @@ const saved = (overrides: Parameters<typeof makeItem>[0], savedAt: string) => ({
 
 const favorites = [
   saved({ title: 'Saved article' }, '2026-01-03T00:00:00Z'),
-  saved({ type: 'social', title: 'Saved post' }, '2026-01-02T00:00:00Z'),
-  saved({ title: 'Older article' }, '2026-01-01T00:00:00Z'),
+  saved({ type: 'movie', title: 'Saved movie' }, '2026-01-02T00:00:00Z'),
+  saved({ type: 'social', title: 'Saved post' }, '2026-01-01T00:00:00Z'),
 ];
 
 describe('FavoritesSection', () => {
@@ -22,15 +22,15 @@ describe('FavoritesSection', () => {
   it('lists saved items, newest first', () => {
     renderWithStore(<FavoritesSection />, { persisted: { favorites } });
     const headings = screen.getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent);
-    expect(headings).toEqual(['Saved article', 'Saved post', 'Older article']);
+    expect(headings).toEqual(['Saved article', 'Saved movie', 'Saved post']);
     expect(screen.getByText('3 saved items')).toBeInTheDocument();
   });
 
   it('filters by type', async () => {
     const { user } = renderWithStore(<FavoritesSection />, { persisted: { favorites } });
-    await user.click(screen.getByRole('button', { name: 'Social' }));
+    await user.click(screen.getByRole('button', { name: 'Movies' }));
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Saved article' })).not.toBeInTheDocument());
-    expect(screen.getByRole('heading', { name: 'Saved post' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Saved movie' })).toBeInTheDocument();
   });
 
   it('removes an item when its heart is toggled off', async () => {

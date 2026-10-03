@@ -7,6 +7,7 @@ import {
   moveFeedItem,
   reorderFeed,
   resetFeedOrder,
+  seedFromFavorites,
   showPendingLive,
 } from './feedSlice';
 
@@ -50,9 +51,17 @@ describe('feed slice', () => {
     expect(store.getState().feed.pendingLive).toHaveLength(30);
   });
 
-  it('restores the saved order on hydration', () => {
+  it('picks the latest favorited TMDB movie as the recommendation seed', () => {
+    const favorites = [
+      { ...makeItem({ id: 'movie-11', type: 'movie', title: 'Older' }), savedAt: '2026-01-01T00:00:00Z' },
+      { ...makeItem({ id: 'movie-22', type: 'movie', title: 'Newer' }), savedAt: '2026-02-01T00:00:00Z' },
+      { ...makeItem({ id: 'movie-demo-3', type: 'movie', title: 'Demo' }), savedAt: '2026-03-01T00:00:00Z' },
+    ];
+    expect(seedFromFavorites(favorites)).toEqual({ id: '22', title: 'Newer' });
+    expect(seedFromFavorites([])).toBeNull();
+
     const store = makeStore();
-    store.dispatch(hydrateFromStorage({ feedOrder: ['x', 'y'] }));
-    expect(store.getState().feed.order).toEqual(['x', 'y']);
+    store.dispatch(hydrateFromStorage({ favorites, feedOrder: ['x'] }));
+    expect(store.getState().feed).toMatchObject({ order: ['x'], recommendationSeed: { id: '22' } });
   });
 });

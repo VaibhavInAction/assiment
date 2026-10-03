@@ -16,13 +16,7 @@ describe('sanitizePersistedState', () => {
         language: 'hi',
         sources: { news: false, movie: false, social: false },
       },
-      favorites: [
-        { ...makeItem(), savedAt: '2026-01-01' },
-        { id: 'broken' },
-        null,
-        // Saved by an older version that still had movies.
-        { ...makeItem(), type: 'movie', savedAt: '2026-01-01' },
-      ],
+      favorites: [{ ...makeItem(), savedAt: '2026-01-01' }, { id: 'broken' }, null],
       feedOrder: ['a', 5, 'b'],
       user: { name: 'Ana', email: 'ana@example.com', avatarColor: 'red; background:url(x)' },
     });
