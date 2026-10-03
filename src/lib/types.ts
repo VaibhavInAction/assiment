@@ -10,7 +10,7 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number];
 
-export const CONTENT_TYPES = ['news', 'movie', 'social'] as const;
+export const CONTENT_TYPES = ['news', 'social'] as const;
 
 export type ContentType = (typeof CONTENT_TYPES)[number];
 
@@ -35,8 +35,6 @@ export interface ContentItem {
   category: Category;
   publishedAt: string;
   author?: string;
-  /** Movies: TMDB vote average out of 10. */
-  rating?: number;
   /** Social posts: like count. */
   likes?: number;
   hashtags?: string[];
@@ -52,7 +50,6 @@ export interface ContentPage {
 
 export interface TrendingResponse {
   news: ContentItem[];
-  movies: ContentItem[];
   social: ContentItem[];
   usingMockData: boolean;
 }

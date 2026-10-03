@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { searchContent } from '@/lib/server/content';
 import { parseFilter, parsePage, parseQuery } from '@/lib/server/params';
 
-/** GET /api/search?q=space&type=all|news|movie|social&page=1 */
+/** GET /api/search?q=space&type=all|news|social&page=1 */
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const query = parseQuery(params.get('q'));

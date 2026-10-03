@@ -36,8 +36,3 @@ export function parseFilter(value: string | null): ContentFilter {
 export function parseCategoryOrAll(value: string | null): Category | 'all' {
   return isCategory(value) ? value : 'all';
 }
-
-/** TMDB ids are positive integers; anything else is ignored. */
-export function parseTmdbId(value: string | null): string | undefined {
-  return value && /^\d{1,10}$/.test(value) ? value : undefined;
-}

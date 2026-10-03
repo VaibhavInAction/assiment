@@ -39,9 +39,9 @@ function sanitizePreferences(value: unknown): Partial<PreferencesState> | undefi
   if (isLanguage(value.language)) result.language = value.language;
   if (typeof value.liveUpdates === 'boolean') result.liveUpdates = value.liveUpdates;
   if (isRecord(value.sources)) {
-    const { news, movie, social } = value.sources;
-    if ([news, movie, social].every((flag) => typeof flag === 'boolean') && (news || movie || social)) {
-      result.sources = { news: news as boolean, movie: movie as boolean, social: social as boolean };
+    const { news, social } = value.sources;
+    if (typeof news === 'boolean' && typeof social === 'boolean' && (news || social)) {
+      result.sources = { news, social };
     }
   }
   return result;

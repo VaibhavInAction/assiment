@@ -19,13 +19,13 @@ describe('FeedSection (integration)', () => {
     );
 
     renderWithStore(<FeedSection />, {
-      persisted: { preferences: { categories: ['science', 'health'], sources: { news: true, movie: false, social: true } } },
+      persisted: { preferences: { categories: ['science', 'health'], sources: { news: true, social: false } } },
     });
 
     expect(await screen.findByRole('heading', { name: 'Personal story' })).toBeInTheDocument();
     expect(requests).toHaveLength(1);
     expect(requests[0].searchParams.get('categories')).toBe('science,health');
-    expect(requests[0].searchParams.get('sources')).toBe('news,social');
+    expect(requests[0].searchParams.get('sources')).toBe('news');
     expect(requests[0].searchParams.get('page')).toBe('1');
   });
 

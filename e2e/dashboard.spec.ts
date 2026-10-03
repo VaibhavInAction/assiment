@@ -2,13 +2,12 @@ import { expect, test } from '@playwright/test';
 import { feedIds, openFeed } from './helpers';
 
 test.describe('Dashboard', () => {
-  test('feed mixes news, movies and social posts and loads more on scroll', async ({ page }) => {
+  test('feed mixes news and social posts and loads more on scroll', async ({ page }) => {
     await openFeed(page);
     await expect(page.getByTestId('demo-data-badge')).toBeVisible();
 
     const cards = page.getByTestId('feed-item');
     await expect(cards.filter({ hasText: 'Read More' }).first()).toBeVisible();
-    await expect(cards.filter({ hasText: 'Play Now' }).first()).toBeVisible();
     await expect(cards.filter({ hasText: 'View Post' }).first()).toBeVisible();
 
     const firstPageCount = (await feedIds(page)).length;

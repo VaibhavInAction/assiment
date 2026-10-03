@@ -24,12 +24,12 @@ describe('SettingsSection', () => {
   it('switches content sources, dark mode and live updates', async () => {
     const { user, store } = renderWithStore(<SettingsSection />);
 
-    await user.click(screen.getByRole('switch', { name: 'Movie recommendations' }));
+    await user.click(screen.getByRole('switch', { name: 'Social posts' }));
     await user.click(screen.getByRole('switch', { name: 'Dark mode' }));
     await user.click(screen.getByRole('switch', { name: 'Real-time updates' }));
 
     const { preferences } = store.getState();
-    expect(preferences.sources.movie).toBe(false);
+    expect(preferences.sources.social).toBe(false);
     expect(preferences.theme).toBe('dark');
     expect(preferences.liveUpdates).toBe(false);
   });

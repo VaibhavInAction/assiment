@@ -9,7 +9,7 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 
 export const metadata: Metadata = {
   title: { default: 'Pulseboard · Personalized Content Dashboard', template: '%s · Pulseboard' },
-  description: 'News, movie recommendations and social posts in one customizable dashboard.',
+  description: 'News and social posts in one customizable dashboard.',
 };
 
 export const viewport: Viewport = {

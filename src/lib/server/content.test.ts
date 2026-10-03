@@ -11,12 +11,12 @@ describe('content aggregation (demo mode)', () => {
     vi.unstubAllEnvs();
   });
 
-  it('mixes news, movies and social posts in one page', async () => {
-    const page = await getFeedPage({ categories: ['technology', 'science'], sources: ['news', 'movie', 'social'], page: 1 });
+  it('mixes news and social posts in one page', async () => {
+    const page = await getFeedPage({ categories: ['technology', 'science'], sources: ['news', 'social'], page: 1 });
     const types = page.items.map((item) => item.type);
 
-    expect(types.slice(0, 3)).toEqual(['news', 'movie', 'social']);
-    expect(page.items.length).toBeLessThanOrEqual(FEED_PAGE_MIX.news + FEED_PAGE_MIX.movie + FEED_PAGE_MIX.social);
+    expect(types.slice(0, 4)).toEqual(['news', 'social', 'news', 'social']);
+    expect(page.items).toHaveLength(FEED_PAGE_MIX.news + FEED_PAGE_MIX.social);
     expect(page.usingMockData).toBe(true);
     expect(page.hasMore).toBe(true);
   });
@@ -35,18 +35,18 @@ describe('content aggregation (demo mode)', () => {
   it('searches every source for a query', async () => {
     const result = await searchContent({ query: 'space', type: 'all', page: 1 });
     const types = new Set(result.items.map((item) => item.type));
-    expect(types).toEqual(new Set(['news', 'movie', 'social']));
+    expect(types).toEqual(new Set(['news', 'social']));
   });
 
   it('can search a single type', async () => {
-    const result = await searchContent({ query: 'interstellar', type: 'movie', page: 1 });
-    expect(result.items.map((item) => item.title)).toEqual(['Interstellar']);
+    const result = await searchContent({ query: 'space', type: 'social', page: 1 });
+    expect(result.items.length).toBeGreaterThan(0);
+    expect(result.items.every((item) => item.type === 'social')).toBe(true);
   });
 
   it('returns trending groups for a category', async () => {
     const trending = await getTrending('sports');
     expect(trending.news.every((item) => item.category === 'sports')).toBe(true);
-    expect(trending.movies.length).toBeGreaterThan(0);
     // Social posts are ranked by likes.
     const likes = trending.social.map((item) => item.likes ?? 0);
     expect(likes).toEqual([...likes].sort((a, b) => b - a));

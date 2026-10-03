@@ -16,7 +16,7 @@ export const initialPreferences: PreferencesState = {
   categories: ['technology', 'business', 'sports'],
   theme: 'light',
   language: 'en',
-  sources: { news: true, movie: true, social: true },
+  sources: { news: true, social: true },
   liveUpdates: true,
 };
 

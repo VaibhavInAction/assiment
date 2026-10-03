@@ -18,13 +18,6 @@ describe('ContentCard', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('uses "Play Now" and shows the rating for movies', () => {
-    renderWithStore(<ContentCard item={makeItem({ type: 'movie', rating: 8.4, publishedAt: '2014-01-01T00:00:00Z' })} />);
-    expect(screen.getByRole('link', { name: /play now/i })).toBeInTheDocument();
-    expect(screen.getByText('Rating 8.4 out of 10')).toBeInTheDocument();
-    expect(screen.getByText('Released 2014')).toBeInTheDocument();
-  });
-
   it('shows author, hashtags and likes for social posts', () => {
     renderWithStore(
       <ContentCard item={makeItem({ type: 'social', author: '@tara', likes: 1200, hashtags: ['#AI', '#WebDev'] })} />,

@@ -25,7 +25,6 @@ describe('SearchSection (integration)', () => {
           ? HttpResponse.json(
               makePage([
                 makeItem({ title: 'Space news' }),
-                makeItem({ type: 'movie', title: 'Space movie' }),
                 makeItem({ type: 'social', title: 'Space post' }),
               ]),
             )
@@ -35,9 +34,8 @@ describe('SearchSection (integration)', () => {
 
     renderWithStore(<SearchSection />, withQuery('space'));
     expect(await screen.findByRole('heading', { name: 'Space news' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Space movie' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Space post' })).toBeInTheDocument();
-    expect(screen.getByText('3 results')).toBeInTheDocument();
+    expect(screen.getByText('2 results')).toBeInTheDocument();
   });
 
   it('filters by type through Redux and refetches', async () => {
@@ -46,17 +44,17 @@ describe('SearchSection (integration)', () => {
       http.get(`${API}/search`, ({ request }) => {
         const type = new URL(request.url).searchParams.get('type');
         types.push(type);
-        return HttpResponse.json(makePage([makeItem({ type: 'movie', title: `Result for ${type}` })]));
+        return HttpResponse.json(makePage([makeItem({ type: 'social', title: `Result for ${type}` })]));
       }),
     );
 
-    const { user, store } = renderWithStore(<SearchSection />, withQuery('matrix'));
+    const { user, store } = renderWithStore(<SearchSection />, withQuery('cricket'));
     await screen.findByRole('heading', { name: 'Result for all' });
 
-    await user.click(screen.getByRole('button', { name: 'Movies' }));
-    expect(store.getState().search.filter).toBe('movie');
-    expect(await screen.findByRole('heading', { name: 'Result for movie' })).toBeInTheDocument();
-    expect(types).toEqual(['all', 'movie']);
+    await user.click(screen.getByRole('button', { name: 'Social' }));
+    expect(store.getState().search.filter).toBe('social');
+    expect(await screen.findByRole('heading', { name: 'Result for social' })).toBeInTheDocument();
+    expect(types).toEqual(['all', 'social']);
   });
 
   it('shows a helpful empty state when nothing matches', async () => {

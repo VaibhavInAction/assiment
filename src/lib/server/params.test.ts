@@ -7,7 +7,6 @@ import {
   parsePage,
   parseQuery,
   parseSources,
-  parseTmdbId,
 } from './params';
 
 describe('request parameter parsing', () => {
@@ -26,8 +25,9 @@ describe('request parameter parsing', () => {
   });
 
   it('defaults to every source when none or only invalid ones are given', () => {
-    expect(parseSources(null)).toEqual(['news', 'movie', 'social']);
-    expect(parseSources('evil')).toEqual(['news', 'movie', 'social']);
+    expect(parseSources(null)).toEqual(['news', 'social']);
+    expect(parseSources('evil')).toEqual(['news', 'social']);
+    expect(parseSources('social')).toEqual(['social']);
     expect(parseSources('social,news')).toEqual(['news', 'social']);
   });
 
@@ -37,15 +37,9 @@ describe('request parameter parsing', () => {
   });
 
   it('accepts only known filters and categories', () => {
-    expect(parseFilter('movie')).toBe('movie');
+    expect(parseFilter('social')).toBe('social');
     expect(parseFilter('drop table')).toBe('all');
     expect(parseCategoryOrAll('science')).toBe('science');
     expect(parseCategoryOrAll('nope')).toBe('all');
-  });
-
-  it('accepts only numeric TMDB ids', () => {
-    expect(parseTmdbId('27205')).toBe('27205');
-    expect(parseTmdbId('../../etc')).toBeUndefined();
-    expect(parseTmdbId(null)).toBeUndefined();
   });
 });

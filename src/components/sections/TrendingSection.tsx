@@ -1,6 +1,6 @@
 'use client';
 
-import { Film, Flame, MessageCircle, Newspaper, TrendingUp, type LucideIcon } from 'lucide-react';
+import { Flame, MessageCircle, Newspaper, TrendingUp, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContentGrid } from '@/components/content/ContentGrid';
@@ -27,7 +27,6 @@ export function TrendingSection() {
   const groups: Array<{ id: string; title: string; icon: LucideIcon; items: ContentItem[] }> = data
     ? [
         { id: 'trending-news', title: t('trending.news'), icon: Newspaper, items: data.news },
-        { id: 'trending-movies', title: t('trending.movies'), icon: Film, items: data.movies },
         { id: 'trending-social', title: t('trending.social'), icon: MessageCircle, items: data.social },
       ]
     : [];
@@ -59,7 +58,7 @@ export function TrendingSection() {
               <h2 id={id} className="mb-4 flex items-center gap-2 text-lg font-semibold">
                 <Icon aria-hidden className="size-5 text-primary" />
                 {title}
-                <Flame aria-hidden className="size-4 text-movie" />
+                <Flame aria-hidden className="size-4 text-danger" />
               </h2>
               {items.length > 0 ? (
                 <ContentGrid items={items} ranked label={title} />

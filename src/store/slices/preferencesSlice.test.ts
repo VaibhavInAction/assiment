@@ -43,7 +43,6 @@ describe('preferences slice', () => {
   it('never disables the last content source', () => {
     const store = makeStore();
     store.dispatch(toggleSource('news'));
-    store.dispatch(toggleSource('movie'));
     store.dispatch(toggleSource('social'));
     expect(selectEnabledSources(store.getState())).toEqual(['social']);
   });
@@ -66,11 +65,11 @@ describe('preferences slice', () => {
   it('merges saved preferences on hydration', () => {
     const store = makeStore();
     store.dispatch(
-      hydrateFromStorage({ preferences: { categories: ['science', 'business'], sources: { news: false, movie: true, social: true } } }),
+      hydrateFromStorage({ preferences: { categories: ['science', 'business'], sources: { news: false, social: true } } }),
     );
     const { preferences } = store.getState();
     expect(preferences.categories).toEqual(['business', 'science']);
-    expect(preferences.sources).toEqual({ news: false, movie: true, social: true });
+    expect(preferences.sources).toEqual({ news: false, social: true });
     expect(preferences.language).toBe('en');
   });
 });

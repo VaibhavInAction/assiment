@@ -32,7 +32,7 @@ export function SearchSection() {
     void fetchNextPage();
   }, [fetchNextPage]);
 
-  const filterOptions = (['all', 'news', 'movie', 'social'] as const).map((value) => ({
+  const filterOptions = (['all', 'news', 'social'] as const).map((value) => ({
     value,
     label: t(`filters.${value}`),
   }));
