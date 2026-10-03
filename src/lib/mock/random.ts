@@ -1,7 +1,7 @@
 import { hashString } from '@/lib/utils';
 
 /** Small deterministic PRNG so demo data is stable between requests and tests. */
-export function mulberry32(seed: number): () => number {
+function mulberry32(seed: number): () => number {
   let state = seed;
   return () => {
     state = (state + 0x6d2b79f5) | 0;

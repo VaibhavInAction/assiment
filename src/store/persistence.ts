@@ -14,7 +14,7 @@ export interface PersistedState {
   user?: User | null;
 }
 
-export function getStorage(): Storage | undefined {
+function getStorage(): Storage | undefined {
   try {
     return typeof window === 'undefined' ? undefined : window.localStorage;
   } catch {

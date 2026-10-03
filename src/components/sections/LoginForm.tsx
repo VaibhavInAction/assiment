@@ -13,7 +13,7 @@ type Field = 'name' | 'email' | 'password';
 type Mode = 'signin' | 'signup';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const DEMO_ACCOUNT = { name: 'Demo User', email: 'demo@pulseboard.dev' };
+const DEMO_ACCOUNT = { name: 'Demo User', email: 'demo@pulseboard.dev' };
 
 /** "jane.doe@site.com" -> "Jane Doe" */
 export function nameFromEmail(email: string): string {

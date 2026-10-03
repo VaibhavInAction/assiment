@@ -12,7 +12,8 @@ test.describe('Drag-and-drop reordering', () => {
     await first.dragTo(third);
 
     const expected = [before[1], before[2], before[0], ...before.slice(3)];
-    await expect.poll(() => feedIds(page)).toEqual(expected);
+    // Compare only the cards that existed before the drag: infinite scroll may append more.
+    await expect.poll(async () => (await feedIds(page)).slice(0, before.length)).toEqual(expected);
 
     const state = await savedState(page);
     expect((state.feedOrder as string[]).slice(0, 3)).toEqual(expected.slice(0, 3));

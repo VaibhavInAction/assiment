@@ -22,13 +22,10 @@ const searchSlice = createSlice({
     setSearchFilter(state, action: PayloadAction<ContentFilter>) {
       state.filter = action.payload;
     },
-    clearSearch() {
-      return initialState;
-    },
   },
 });
 
-export const { setQuery, setSearchFilter, clearSearch } = searchSlice.actions;
+export const { setQuery, setSearchFilter } = searchSlice.actions;
 export default searchSlice.reducer;
 
 export const selectSearchQuery = (state: RootState) => state.search.query;

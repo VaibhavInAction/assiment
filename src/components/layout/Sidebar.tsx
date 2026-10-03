@@ -19,7 +19,7 @@ const NAV_ITEMS = [
   { href: '/settings', key: 'settings', icon: Settings },
 ] as const;
 
-export function isActivePath(pathname: string, href: string): boolean {
+function isActivePath(pathname: string, href: string): boolean {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
 }
 

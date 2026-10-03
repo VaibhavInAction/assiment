@@ -1,6 +1,6 @@
 import 'server-only';
 
-export class UpstreamError extends Error {
+class UpstreamError extends Error {
   constructor(
     message: string,
     readonly status?: number,
@@ -11,7 +11,7 @@ export class UpstreamError extends Error {
 }
 
 /** Upstream responses are cached for 15 minutes to protect free-tier quotas. */
-export const UPSTREAM_REVALIDATE_SECONDS = 900;
+const UPSTREAM_REVALIDATE_SECONDS = 900;
 
 export async function fetchJson<T>(url: string, init: RequestInit = {}, timeoutMs = 8000): Promise<T> {
   const response = await fetch(url, {

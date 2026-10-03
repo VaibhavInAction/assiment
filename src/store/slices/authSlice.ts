@@ -20,7 +20,7 @@ export interface AuthState {
 
 export const AVATAR_COLORS = ['#4338ca', '#0e7490', '#be185d', '#c2410c', '#15803d', '#6d28d9'] as const;
 
-export function avatarColorFor(email: string): string {
+function avatarColorFor(email: string): string {
   return AVATAR_COLORS[parseInt(hashString(email.toLowerCase()), 36) % AVATAR_COLORS.length];
 }
 

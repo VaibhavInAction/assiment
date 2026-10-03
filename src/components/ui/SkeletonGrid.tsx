@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 
-export function SkeletonCard() {
+function SkeletonCard() {
   return (
     <div aria-hidden className="card-surface overflow-hidden" data-testid="skeleton-card">
       <div className="aspect-video bg-muted motion-safe:animate-pulse" />

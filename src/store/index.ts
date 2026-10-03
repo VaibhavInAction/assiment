@@ -8,7 +8,7 @@ import preferences from './slices/preferencesSlice';
 import search from './slices/searchSlice';
 import ui from './slices/uiSlice';
 
-export const rootReducer = combineReducers({
+const rootReducer = combineReducers({
   preferences,
   favorites,
   feed,

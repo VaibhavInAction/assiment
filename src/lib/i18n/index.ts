@@ -11,7 +11,7 @@ export const LANGUAGE_NAMES: Record<Language, string> = {
   es: 'Español',
 };
 
-export const resources = {
+const resources = {
   en: { translation: en },
   hi: { translation: hi },
   es: { translation: es },

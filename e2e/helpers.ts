@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-export const STORAGE_KEY = 'pulseboard:v1';
+const STORAGE_KEY = 'pulseboard:v1';
 
 /** Opens the feed and waits until the first page of cards has rendered. */
 export async function openFeed(page: Page) {

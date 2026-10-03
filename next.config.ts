@@ -9,6 +9,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Don't auto-generate AI editor instruction files in the project root.
+  agentRules: false,
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },

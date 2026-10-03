@@ -2,8 +2,8 @@ import { CATEGORIES, CONTENT_TYPES, isCategory, isContentType, type Category, ty
 
 /** Hard cap so a client cannot page forever (and burn API quota). */
 export const MAX_PAGES = 10;
-export const MAX_QUERY_LENGTH = 100;
-export const DEFAULT_CATEGORIES: Category[] = ['general'];
+const MAX_QUERY_LENGTH = 100;
+const DEFAULT_CATEGORIES: Category[] = ['general'];
 
 export function parsePage(value: string | null): number {
   const page = Number.parseInt(value ?? '', 10);
