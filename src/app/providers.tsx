@@ -7,7 +7,7 @@ import i18n from '@/lib/i18n';
 import { makeStore } from '@/store';
 import { hydrateFromStorage } from '@/store/hydrate';
 import { useAppSelector } from '@/store/hooks';
-import { readInitialClientState } from '@/store/persistence';
+import { readInitialClientState, savePersistedState, selectPersistedState } from '@/store/persistence';
 import { selectLanguage, selectTheme } from '@/store/slices/preferencesSlice';
 import { selectHydrated } from '@/store/slices/uiSlice';
 
@@ -39,6 +39,13 @@ export function Providers({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     store.dispatch(hydrateFromStorage(readInitialClientState()));
+
+    // Saves are debounced; flush on unload so a quick reload never loses the latest change.
+    const flush = () => {
+      if (store.getState().ui.hydrated) savePersistedState(selectPersistedState(store.getState()));
+    };
+    window.addEventListener('pagehide', flush);
+    return () => window.removeEventListener('pagehide', flush);
   }, [store]);
 
   return (
