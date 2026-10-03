@@ -82,8 +82,8 @@ Extras: a "Demo data" badge whenever bundled fallback content is shown, a `/` ke
 ### 1. Install
 
 ```bash
-git clone <your-repo-url>
-cd personalized-content-dashboard
+git clone https://github.com/VaibhavInAction/assiment.git
+cd assiment
 npm install
 ```
 
