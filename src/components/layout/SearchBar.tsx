@@ -2,7 +2,7 @@
 
 import { Search, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { cn } from '@/lib/utils';
@@ -23,15 +23,26 @@ export function SearchBar({ className }: { className?: string }) {
   const committedQuery = useAppSelector(selectSearchQuery);
   const [value, setValue] = useState(committedQuery);
   const debouncedValue = useDebouncedValue(value, SEARCH_DEBOUNCE_MS);
+  const lastDebouncedValue = useRef(debouncedValue);
   const inputRef = useRef<HTMLInputElement>(null);
   const inputId = useId();
 
+  const commit = useCallback(
+    (raw: string) => {
+      const query = raw.trim();
+      dispatch(setQuery(query));
+      if (query.length >= MIN_QUERY_LENGTH && pathname !== '/search') router.push('/search');
+    },
+    [dispatch, pathname, router],
+  );
+
+  // React only to the debounced value changing. Enter and Clear commit
+  // immediately, and must not be undone by a stale debounced value.
   useEffect(() => {
-    const query = debouncedValue.trim();
-    if (query === committedQuery) return;
-    dispatch(setQuery(query));
-    if (query.length >= MIN_QUERY_LENGTH && pathname !== '/search') router.push('/search');
-  }, [debouncedValue, committedQuery, dispatch, pathname, router]);
+    if (debouncedValue === lastDebouncedValue.current) return;
+    lastDebouncedValue.current = debouncedValue;
+    commit(debouncedValue);
+  }, [debouncedValue, commit]);
 
   // Press "/" anywhere to jump to the search box.
   useEffect(() => {
@@ -55,10 +66,8 @@ export function SearchBar({ className }: { className?: string }) {
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const query = value.trim();
     // Enter skips the debounce wait.
-    dispatch(setQuery(query));
-    if (query.length >= MIN_QUERY_LENGTH && pathname !== '/search') router.push('/search');
+    commit(value);
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
