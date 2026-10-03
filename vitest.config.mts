@@ -1,11 +1,11 @@
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), react()],
+  plugins: [react()],
   resolve: {
+    tsconfigPaths: true,
     alias: {
       // `server-only` throws outside a React Server environment; server modules are
       // still plain functions we want to unit test, so stub the guard in Vitest.
