@@ -4,7 +4,6 @@ A dashboard that brings **news** and **social posts** into one feed you can cust
 
 Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Redux Toolkit + RTK Query**, **Tailwind CSS v4**, **Framer Motion** and **React DnD**. Tested with **Vitest**, **React Testing Library**, **MSW** and **Playwright**.
 
-- **Live demo:** _add your Vercel link here_
 - **Demo video:** _add your video link here_
 
 ![Personalized feed in light mode](docs/screenshots/feed-light.png)
@@ -30,7 +29,7 @@ Built with **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Redux To
 7. [Accessibility](#accessibility)
 8. [Security](#security)
 9. [Testing](#testing)
-10. [Deployment](#deployment)
+10. [Production build](#production-build)
 11. [Trade-offs and next steps](#trade-offs-and-next-steps)
 
 ---
@@ -287,16 +286,18 @@ CI (`.github/workflows/ci.yml`) runs lint, typecheck, unit tests with coverage, 
 
 ---
 
-## Deployment
+## Production build
 
-The app deploys to **Vercel** with no configuration:
+To run the optimized production version locally:
 
-1. Push this repository to GitHub.
-2. In Vercel: **Add New → Project →** import the repo.
-3. Add `NEWS_API_KEY` under **Environment Variables**.
-4. **Deploy.**
+```bash
+npm run build
+npm start
+```
 
-> **Note on NewsAPI's free plan:** it is intended for development and allows 100 requests a day. If the deployed site exceeds that or is blocked, news automatically falls back to demo data and a "Demo data" badge appears. Nothing breaks.
+Then open <http://localhost:3000>. The `NEWS_API_KEY` from `.env.local` is used here too.
+
+> **Note on NewsAPI's free plan:** it allows 100 requests a day. If the limit is reached, news automatically falls back to demo data and a "Demo data" badge appears. Nothing breaks.
 
 ---
 
